@@ -7,6 +7,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -30,5 +31,14 @@ class HelloControllerTests {
                 .perform(get("/hello").param("name", "Claus"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello Claus"));
+    }
+
+    @Test
+    void getPropertiesReturnsEmailConfiguration() throws Exception {
+        webAppContextSetup(context).build()
+                .perform(get("/getProperties"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$['email.user']").value("claus"))
+                .andExpect(jsonPath("$['email.host']").value("smtp.qq.com"));
     }
 }
