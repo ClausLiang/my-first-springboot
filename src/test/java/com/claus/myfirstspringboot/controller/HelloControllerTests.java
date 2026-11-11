@@ -41,4 +41,13 @@ class HelloControllerTests {
                 .andExpect(jsonPath("$['email.user']").value("claus"))
                 .andExpect(jsonPath("$['email.host']").value("smtp.qq.com"));
     }
+
+    @Test
+    void getEmailPropertiesReturnsBoundConfiguration() throws Exception {
+        webAppContextSetup(context).build()
+                .perform(get("/getEmailProperties"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user").value("claus"))
+                .andExpect(jsonPath("$.host").value("smtp.qq.com"));
+    }
 }

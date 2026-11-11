@@ -12,6 +12,7 @@
 - 已实现第一个接口：访问 `http://localhost:8080/hello` 返回 `hello world`；加上 `?name=Claus` 返回 `hello Claus`。
 - 已使用 `@Value` 读取 `application.properties` 中的 `email.user` 和 `email.host`，并在启动时打印到控制台。
 - 已添加 GET `/getProperties`，在 Controller 中读取并以 JSON 返回这两个配置。
+- 已添加 `@ConfigurationProperties` 示例，将 `email` 配置绑定到 `EmailProperties` 类。
 
 ## 开发环境
 
@@ -31,6 +32,8 @@
 应用启动后，在浏览器打开 `http://localhost:8080/hello`，或用 `http://localhost:8080/hello?name=Claus` 传入名字。`@RestController` 表示该类处理 Web 请求并直接返回响应内容；`@GetMapping("/hello")` 将 GET 请求映射到 `hello()` 方法；`@RequestParam` 读取 URL 中的 `name` 参数，未提供时使用默认值 `world`。
 
 访问 `http://localhost:8080/getProperties` 可看到 `email.user` 和 `email.host` 的 JSON 响应。这两个值只是学习示例；不要把密码、令牌等敏感配置通过接口返回。
+
+访问 `http://localhost:8080/getEmailProperties` 可看到另一种读取方式的结果：`{"user":"claus","host":"smtp.qq.com"}`。`@ConfigurationProperties(prefix = "email")` 将同一前缀下的配置绑定到一个对象，入口类上的 `@ConfigurationPropertiesScan` 负责发现并注册它。
 
 也可以在项目根目录使用本机安装的 Maven：
 
@@ -60,5 +63,6 @@ src/
 | 请求参数 | 使用 `@RequestParam` 接收 URL 中的 `name` 参数并设置默认值 | `/hello?name=Claus` 返回 `hello Claus`；不传参数仍返回 `hello world` |
 | 读取配置 | 使用 `@Value` 注入 `application.properties` 中的值，使用 `@PostConstruct` 在组件初始化后打印 | 启动时在控制台看到 `email.user` 和 `email.host` |
 | Controller 读取配置 | 在 `HelloController` 中使用 `@Value`，通过 GET 接口返回配置 | `/getProperties` 返回包含两个配置的 JSON |
+| 批量绑定配置 | 使用 `@ConfigurationProperties` 将 `email.user` 和 `email.host` 绑定到 `EmailProperties` | `/getEmailProperties` 返回绑定后的对象 |
 
 后续每完成一个学习主题，就在这里补充学习内容、对应代码和遇到的问题；具体代码以仓库中的提交记录为准。
